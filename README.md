@@ -1,17 +1,18 @@
-<div align="center">
-
-<img src="docs/figures/fig1_blood_flow.jpg" alt="Sickle cells obstructing blood flow in a capillary" width="520">
 
 # Sickle Cell Classification from Blood Smear Images
 
 Transfer-learning CNNs that classify individual red blood cells in microscopic smear images as **sickle**, **non-sickle** or **AIN** (anomaly / unclear), with Grad-CAM and LIME explanations.
+
+<div align="center">
+
+<img src="docs/figures/fig1_blood_flow.jpg" alt="Sickle cells obstructing blood flow in a capillary" width="520">
 
 [![Python](https://img.shields.io/badge/python-3.10%2B-3776AB?logo=python&logoColor=white)](https://www.python.org/)
 [![PyTorch](https://img.shields.io/badge/PyTorch-2.x-EE4C2C?logo=pytorch&logoColor=white)](https://pytorch.org/)
 [![Tests](https://img.shields.io/badge/tests-pytest-0A9EDC?logo=pytest&logoColor=white)](tests/)
 [![Status](https://img.shields.io/badge/status-research%20prototype-orange)](#limitations)
 
-**[🔗 Live interactive dashboard](https://sh2680.github.io/Sickle_Cell_Detection/)** &nbsp;·&nbsp; [Results](#results) &nbsp;·&nbsp; [Quick start](#quick-start) &nbsp;·&nbsp; [Method](#method) &nbsp;·&nbsp; [Full results report](docs/RESULTS.md) &nbsp;·&nbsp; [Paper](docs/paper/Paper_id_1236_Sickle_cell_.docx)
+**[🔗 Live interactive dashboard](https://sh2680.github.io/Sickle_Cell_Detection/)** &nbsp;·&nbsp; [Results](#results) &nbsp;·&nbsp; [Quick start](#quick-start) &nbsp;·&nbsp; [Method](#method) &nbsp;·&nbsp; [Full results report](docs/RESULTS.md) &nbsp;·&nbsp; [Paper](docs/paper/Sickle_cell_research_paper.pdf)
 
 </div>
 
