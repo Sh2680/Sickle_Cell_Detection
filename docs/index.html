@@ -432,7 +432,7 @@ const STEPS = [
   ["2. Annotation", "Images were labelled as sickle, non-sickle or anomaly (AIN, anomalies inside the nest directory). The Kaggle positives were mapped to sickle; the Roboflow WBC, RBC and platelet classes were mapped to non-sickle."],
   ["3. Preprocessing", "Resize to 224×224 (ResNet50, ShuffleNetV2, MobileNetV2) or 299×299 (InceptionV3), followed by ImageNet normalisation."],
   ["4. Augmentation", "Training only: horizontal flip, rotation of ±15°, colour jitter and random resized crop (80–100% of area). Evaluation uses a deterministic resize only."],
-  ["5. Transfer learning", "ImageNet-pretrained backbones with a new 3-class head. AdamW (learning rate 1e-4, weight decay 1e-4), cross-entropy loss and cosine annealing. The paper gives 10 epochs for MobileNetV2 and ShuffleNetV2, "more than 10" for InceptionV3, and no epoch count for ResNet50. The InceptionV3 head uses dropout 0.5 and auxiliary-loss weights 0.6 and 0.4."],
+  ["5. Transfer learning", "ImageNet-pretrained backbones with a new 3-class head. AdamW (learning rate 1e-4, weight decay 1e-4), cross-entropy loss and cosine annealing. The paper gives 10 epochs for MobileNetV2 and ShuffleNetV2, “more than 10” for InceptionV3, and no epoch count for ResNet50. The InceptionV3 head uses dropout 0.5 and auxiliary-loss weights 0.6 and 0.4."],
   ["6. Evaluation", "Accuracy, sensitivity (recall), precision, F1-score and confusion matrices, followed by error analysis of misclassifications."],
   ["7. Explainability", "Grad-CAM heatmaps and LIME superpixel explanations, used to check that the model attends to cell morphology rather than background."]
 ];
