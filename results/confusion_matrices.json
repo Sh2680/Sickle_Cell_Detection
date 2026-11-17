@@ -1,0 +1,11 @@
+{
+  "_note": "Raw counts read from the confusion-matrix figures in the paper (docs/figures). Rows = actual class, columns = predicted class. Each matrix totals 448 samples, equal to the test-set size stated in the paper. The ResNet50 assignment is inferred from figure order (Figure 6); the image itself is unlabeled.",
+  "classes": ["AIN", "non_sickle", "sickle"],
+  "test_set_size": 448,
+  "matrices": {
+    "InceptionV3":  [[114, 26, 0], [34, 101, 0], [6, 10, 157]],
+    "MobileNetV2":  [[120, 20, 0], [38, 97, 0], [6, 9, 158]],
+    "ShuffleNetV2": [[112, 28, 0], [18, 117, 0], [6, 11, 156]],
+    "ResNet50":     [[70, 48, 22], [75, 30, 30], [40, 5, 128]]
+  }
+}

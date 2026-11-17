@@ -1,0 +1,34 @@
+cff-version: 1.2.0
+message: "If you use this software or the associated paper, please cite it as below."
+title: "AI-Powered Medical Imaging for Fast and Accurate Sickle Cell Detection"
+type: software
+version: 1.0.0
+license: MIT
+authors:
+  - family-names: Nandurkar
+    given-names: Sanika
+    affiliation: "G H Raisoni College of Engineering Nagpur"
+  - family-names: Tichkule
+    given-names: Shilpa
+    affiliation: "G H Raisoni College of Engineering Nagpur"
+  - family-names: Bobade
+    given-names: Dikshak
+    affiliation: "G H Raisoni College of Engineering Nagpur"
+  - family-names: Agrawal
+    given-names: Rahul
+    affiliation: "G H Raisoni College of Engineering Nagpur"
+  - family-names: Dhule
+    given-names: Chetan
+    affiliation: "G H Raisoni College of Engineering Nagpur"
+  - family-names: Chavhan Morris
+    given-names: Nekita
+    affiliation: "G H Raisoni College of Engineering Nagpur"
+# TODO: set to your public repository URL before publishing.
+repository-code: "https://github.com/<your-username>/sickle-cell-classification"
+keywords:
+  - sickle cell disease
+  - blood smear
+  - transfer learning
+  - ResNet50
+  - Grad-CAM
+  - LIME

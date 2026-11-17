@@ -1,0 +1,9 @@
+{
+  "_note": "Values as printed in the paper. 'accuracy' is taken from the Results text (Table 2 rounds to two decimals). 'macro_avg_table' and 'sickle_recall_table' are from Table 2. The paper's text gives a ResNet50 macro-F1 of 0.94, which conflicts with its own Table 2 value of 0.86.",
+  "models": {
+    "ResNet50":     {"accuracy": 87.28, "macro_avg_table": 0.86, "macro_f1_text": 0.94, "sickle_recall_table": 0.97, "f1_table": 0.95},
+    "ShuffleNetV2": {"accuracy": 85.94, "macro_avg_table": 0.85, "macro_f1_text": null, "sickle_recall_table": 0.90, "f1_table": 0.95},
+    "MobileNetV2":  {"accuracy": 83.71, "macro_avg_table": 0.83, "macro_f1_text": null, "sickle_recall_table": 0.91, "f1_table": 0.95},
+    "InceptionV3":  {"accuracy": 83.04, "macro_avg_table": 0.82, "macro_f1_text": null, "sickle_recall_table": 0.91, "f1_table": 0.95}
+  }
+}

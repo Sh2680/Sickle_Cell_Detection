@@ -1,0 +1,453 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sickle Cell Classification · Interactive Results</title>
+<style>
+:root{--bg:#f6f7f9;--card:#ffffff;--text:#1c2330;--muted:#5d6676;--border:#e1e5ec;--accent:#2563eb;--warn-bg:#fdf2f2;--warn:#a31919;--ok-bg:#eef9f1;--ok:#17703a;--bar-rep:#b8c2d1}
+@media (prefers-color-scheme: dark){:root{--bg:#0e131d;--card:#161d2b;--text:#e7ebf3;--muted:#9ba6ba;--border:#27324a;--accent:#6ba4ff;--warn-bg:#3a1b1b;--warn:#ffb4b4;--ok-bg:#15301f;--ok:#9be7b6;--bar-rep:#4a5669}}
+*{box-sizing:border-box}
+body{margin:0;font:15px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--text)}
+.wrap{max-width:1100px;margin:0 auto;padding:0 20px}
+header{padding:28px 0 6px}
+h1{font-size:1.6rem;margin:0 0 4px}
+h2{font-size:1.15rem;margin:0 0 8px}
+p{margin:6px 0}
+.sub{color:var(--muted);margin:0}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;margin:18px 0}
+.stat{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px 16px}
+.stat .v{font-size:1.45rem;font-weight:700}
+.stat .l{color:var(--muted);font-size:.85rem}
+.banner{border-radius:12px;padding:12px 16px;margin:0 0 16px;border:1px solid}
+.banner.warn{background:var(--warn-bg);color:var(--warn);border-color:var(--warn)}
+.banner.ok{background:var(--ok-bg);color:var(--ok);border-color:var(--ok)}
+nav{display:flex;flex-wrap:wrap;gap:6px;border-bottom:1px solid var(--border);padding:10px 0;position:sticky;top:0;background:var(--bg);z-index:2}
+nav button{background:none;border:1px solid transparent;border-radius:8px;padding:7px 12px;color:var(--muted);font:inherit;cursor:pointer}
+nav button[aria-selected="true"]{background:var(--card);border-color:var(--border);color:var(--text);font-weight:600}
+.panel{display:none;padding-top:14px}
+.panel.on{display:block}
+.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px 20px;margin-bottom:16px}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:8px 0 12px}
+.seg button{background:var(--card);border:1px solid var(--border);color:var(--text);padding:6px 12px;font:inherit;cursor:pointer;margin-right:-1px}
+.seg button:first-child{border-radius:8px 0 0 8px}
+.seg button:last-child{border-radius:0 8px 8px 0}
+.seg button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+.legend{display:flex;gap:16px;font-size:.88rem;color:var(--muted);margin-top:4px}
+.sw{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+table{border-collapse:collapse;width:100%;font-size:.93rem}
+th,td{padding:8px 10px;border-bottom:1px solid var(--border);text-align:right}
+th:first-child,td:first-child{text-align:left}
+th{color:var(--muted);font-weight:600}
+td.tag-ok{color:var(--ok);font-weight:600}
+td.tag-bad{color:var(--warn);font-weight:600}
+.cm td{text-align:center;min-width:110px;height:58px;font-variant-numeric:tabular-nums}
+.cm td.h{background:none;font-weight:600;color:var(--muted)}
+.cm td.rowh{text-align:left;color:var(--muted);font-weight:600}
+.cell-n{font-size:1.1rem;font-weight:700}
+.cell-p{font-size:.78rem;opacity:.85}
+input[type=number]{width:96px;padding:6px 8px;border:1px solid var(--border);border-radius:8px;background:var(--card);color:var(--text);font:inherit;text-align:center}
+.calc td input{width:100%}
+button.btn{background:var(--accent);color:#fff;border:0;border-radius:8px;padding:7px 12px;font:inherit;cursor:pointer}
+button.ghost{background:var(--card);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:6px 12px;font:inherit;cursor:pointer}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:12px 0}
+.kpis div{background:var(--bg);border-radius:10px;padding:10px 12px}
+.kpis b{display:block;font-size:1.25rem}
+.split{display:flex;height:34px;border-radius:8px;overflow:hidden;border:1px solid var(--border);margin:8px 0}
+.split div{display:flex;align-items:center;justify-content:center;color:#fff;font-size:.82rem;font-weight:600;white-space:nowrap;overflow:hidden}
+details{border-bottom:1px solid var(--border);padding:10px 0}
+details summary{cursor:pointer;font-weight:600}
+details p{color:var(--muted);margin:6px 0 0 0}
+figure{margin:0}
+figure img{width:100%;border-radius:10px;border:1px solid var(--border);background:#fff}
+figcaption{color:var(--muted);font-size:.88rem;margin-top:6px}
+.figs{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
+ol.issues li{margin-bottom:10px}
+code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.88em}
+footer{color:var(--muted);font-size:.85rem;padding:24px 0 40px;border-top:1px solid var(--border);margin-top:20px}
+svg text{font-family:system-ui,sans-serif}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <h1>Sickle Cell Classification: Interactive Results</h1>
+  <p class="sub">Companion dashboard for the paper <em>AI-Powered Medical Imaging for Fast and Accurate Sickle Cell Detection</em>. Everything here is computed in your browser from the paper's published numbers.</p>
+</header>
+
+<div class="grid">
+  <div class="stat"><div class="v">3</div><div class="l">classes: AIN · non-sickle · sickle</div></div>
+  <div class="stat"><div class="v">448</div><div class="l">test images per model</div></div>
+  <div class="stat"><div class="v">85.94%</div><div class="l">best accuracy reproduced from the figures (ShuffleNetV2)</div></div>
+  <div class="stat"><div class="v">50.89%</div><div class="l">ResNet50 accuracy implied by its paper figure (reported: 87.28%)</div></div>
+</div>
+
+<div class="banner warn" role="alert">
+  <strong>Important:</strong> the paper's headline result (ResNet50, 87.28%) is not supported by the confusion matrix printed for it. Three of four matrices reproduce their reported accuracy exactly; the ResNet50 matrix does not. See the <a href="#" data-goto="compare">comparison</a> and the <a href="#" data-goto="notes">verification notes</a>.
+</div>
+
+<nav role="tablist" id="tabs">
+  <button role="tab" data-tab="compare" aria-selected="true">Compare models</button>
+  <button role="tab" data-tab="matrix" aria-selected="false">Confusion matrices</button>
+  <button role="tab" data-tab="calc" aria-selected="false">Metric calculator</button>
+  <button role="tab" data-tab="dataset" aria-selected="false">Dataset</button>
+  <button role="tab" data-tab="pipeline" aria-selected="false">Pipeline</button>
+  <button role="tab" data-tab="xai" aria-selected="false">Explainability</button>
+  <button role="tab" data-tab="notes" aria-selected="false">Verification notes</button>
+</nav>
+
+<!-- COMPARE -->
+<section class="panel on" id="panel-compare">
+  <div class="card">
+    <h2>Reported vs. recomputed</h2>
+    <p>Grey bars show what the paper reports. Blue bars are recomputed from the confusion-matrix figures.</p>
+    <div class="row seg" id="metricSeg">
+      <button data-metric="accuracy" aria-pressed="true">Accuracy</button>
+      <button data-metric="macro" aria-pressed="false">Macro-average F1</button>
+      <button data-metric="recall" aria-pressed="false">Sickle-class recall</button>
+    </div>
+    <div id="chart"></div>
+    <div class="legend">
+      <span><span class="sw" style="background:var(--bar-rep)"></span>Reported in paper</span>
+      <span><span class="sw" style="background:var(--accent)"></span>Recomputed from figures</span>
+    </div>
+  </div>
+  <div class="card">
+    <h2>Full comparison</h2>
+    <div style="overflow-x:auto">
+    <table id="compareTable"></table>
+    </div>
+  </div>
+</section>
+
+<!-- MATRIX -->
+<section class="panel" id="panel-matrix">
+  <div class="card">
+    <h2>Confusion matrix explorer</h2>
+    <p>Rows are the true class, columns the predicted class. Shading is the share of each row (how often that true class was predicted as each label).</p>
+    <div class="row seg" id="modelSeg"></div>
+    <div style="overflow-x:auto"><table class="cm" id="cmTable"></table></div>
+    <h2 style="margin-top:18px">Per-class metrics</h2>
+    <div style="overflow-x:auto"><table id="perClass"></table></div>
+  </div>
+</section>
+
+<!-- CALC -->
+<section class="panel" id="panel-calc">
+  <div class="card">
+    <h2>Metric calculator</h2>
+    <p>Edit any count in the 3×3 matrix (rows = actual, columns = predicted). Metrics update live. Start from a preset or enter your own counts, for example from a new evaluation run.</p>
+    <div class="row">
+      <button class="ghost" data-preset="InceptionV3">InceptionV3</button>
+      <button class="ghost" data-preset="MobileNetV2">MobileNetV2</button>
+      <button class="ghost" data-preset="ShuffleNetV2">ShuffleNetV2</button>
+      <button class="ghost" data-preset="ResNet50">ResNet50 (figure)</button>
+    </div>
+    <div style="overflow-x:auto">
+    <table class="calc" id="calcTable"></table>
+    </div>
+    <div class="kpis" id="calcKpis"></div>
+    <div style="overflow-x:auto"><table id="calcPer"></table></div>
+  </div>
+</section>
+
+<!-- DATASET -->
+<section class="panel" id="panel-dataset">
+  <div class="card">
+    <h2>How the merged dataset was split</h2>
+    <p>The paper states a 70 / 20 / 10 split. The reported counts give different proportions, shown below.</p>
+    <p><strong>Stated:</strong> train 70% · validation 20% · test 10%</p>
+    <div class="split" id="splitStated"></div>
+    <p><strong>Reported counts</strong> (total <span id="totalN"></span>):</p>
+    <div class="split" id="splitActual"></div>
+    <div style="overflow-x:auto"><table id="splitTable"></table></div>
+    <div class="banner warn" style="margin-top:14px">The reported counts give roughly 75 / 12 / 12, not 70 / 20 / 10. The test count of 448 is consistent with the confusion matrices, which each total 448.</div>
+  </div>
+  <div class="card">
+    <h2>Source composition (Kaggle portion)</h2>
+    <p>The paper gives class counts only for the Kaggle source. The Roboflow contribution is not broken down.</p>
+    <div style="overflow-x:auto"><table id="kaggleTable"></table></div>
+  </div>
+</section>
+
+<!-- PIPELINE -->
+<section class="panel" id="panel-pipeline">
+  <div class="card">
+    <h2>Method, step by step</h2>
+    <p>Select a step to read the details from the paper.</p>
+    <div id="steps"></div>
+    <figure style="margin-top:14px">
+      <img src="figures/fig2_workflow.png" alt="Workflow diagram of the proposed model" loading="lazy">
+      <figcaption>Figure 2 (paper): workflow of the proposed model.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- XAI -->
+<section class="panel" id="panel-xai">
+  <div class="card">
+    <h2>What the model looks at</h2>
+    <p>The paper uses Grad-CAM (where the network looks) and LIME (which superpixels drive a decision). These are the paper's example figures; they are illustrative and not a quantitative evaluation of explanation quality.</p>
+    <div class="figs">
+      <figure><img src="figures/fig1_blood_flow.jpg" alt="Sickle cells blocking blood flow" loading="lazy"><figcaption>Figure 1: sickle cells obstructing blood flow.</figcaption></figure>
+      <figure><img src="figures/fig7_gradcam.png" alt="Grad-CAM heatmap" loading="lazy"><figcaption>Figure 7: Grad-CAM heatmap for a non-sickle sample.</figcaption></figure>
+      <figure><img src="figures/fig8_lime.png" alt="LIME explanation" loading="lazy"><figcaption>Figure 8: LIME superpixels for a sickle prediction.</figcaption></figure>
+      <figure><img src="figures/fig9_predictions.png" alt="Predictions grid" loading="lazy"><figcaption>Figure 9: sample predictions from the ResNet50 model.</figcaption></figure>
+    </div>
+  </div>
+</section>
+
+<!-- NOTES -->
+<section class="panel" id="panel-notes">
+  <div class="card">
+    <h2>Verification notes</h2>
+    <p>These are inconsistencies found while cross-checking the paper's text, tables and figures. They should be resolved before the results are cited as definitive.</p>
+    <ol class="issues">
+      <li><strong>ResNet50 figure vs. reported results.</strong> The matrix attributed to ResNet50 (Figure 6) implies 50.89% accuracy and a macro-F1 of 0.48. The paper reports 87.28%, a macro-F1 of 0.94 in the text and 0.86 in Table 2, and sickle recall 0.97 (Table 2) where the matrix gives 0.74. The text also says AIN images were predicted "with high reliability", but the matrix shows only 50% AIN recall. The figure is unlabeled, so its model attribution is inferred from figure order.</li>
+      <li><strong>"Validation" vs. test accuracy.</strong> The text labels 83.04%, 83.71% and 85.94% as validation accuracy. Those values match the confusion matrices, which total 448 samples, the stated <em>test</em> size. The labelling in the text is likely wrong.</li>
+      <li><strong>Split proportions.</strong> The text states 70 / 20 / 10. The counts (2,789 / 459 / 448) give about 75 / 12 / 12.</li>
+      <li><strong>Table 2 labels.</strong> The "F1-score" row (0.95 for every model) matches the sickle-class F1, not a macro average, and "Support 173" is the sickle-class count, not the test-set size. The "Accuracy" row is rounded to two decimals.</li>
+      <li><strong>Class naming.</strong> The text says "nonsickle" and the figures say "non_sickle". The repository uses <code>non_sickle</code> throughout.</li>
+      <li><strong>References.</strong> Reference [5] is dated 2023 in the text and 2021 in the reference list. Reference [9] (a "patient/provider match tool") does not match the study described for Jiebin Liang et al. Check the bibliography before submission.</li>
+      <li><strong>Data provenance.</strong> The data come from Kaggle and Roboflow, each with its own license and terms. The paper does not state whether patient data were de-identified or whether ethics approval was obtained. Confirm both before public release.</li>
+    </ol>
+    <div class="banner ok" style="margin-top:12px">Reproducible from the paper's own figures: InceptionV3, MobileNetV2 and ShuffleNetV2 accuracies, and their sickle-class F1 of 0.95.</div>
+  </div>
+</section>
+
+<footer>
+  Research software. Not a medical device and not for clinical diagnosis. Results come from a single dataset, have not been externally validated, and are not a substitute for laboratory or clinical assessment.
+  Source: <code>results/confusion_matrices.json</code> · Verified by <code>scripts/recompute_metrics.py</code>.
+</footer>
+</div>
+
+<script>
+/* ---------- Data (from the paper; see results/*.json) ---------- */
+const DATA = {
+  classes: ["AIN", "non_sickle", "sickle"],
+  models: ["ResNet50", "ShuffleNetV2", "MobileNetV2", "InceptionV3"],
+  matrices: {
+    "InceptionV3":  [[114, 26, 0], [34, 101, 0], [6, 10, 157]],
+    "MobileNetV2":  [[120, 20, 0], [38, 97, 0], [6, 9, 158]],
+    "ShuffleNetV2": [[112, 28, 0], [18, 117, 0], [6, 11, 156]],
+    "ResNet50":     [[70, 48, 22], [75, 30, 30], [40, 5, 128]]
+  },
+  reported: {
+    "ResNet50":     { accuracy: 87.28, macro: 0.86, sickleRecall: 0.97 },
+    "ShuffleNetV2": { accuracy: 85.94, macro: 0.85, sickleRecall: 0.90 },
+    "MobileNetV2":  { accuracy: 83.71, macro: 0.83, sickleRecall: 0.91 },
+    "InceptionV3":  { accuracy: 83.04, macro: 0.82, sickleRecall: 0.91 }
+  },
+  split: { train: 2789, val: 459, test: 448 },
+  kaggle: { positive_sickle: 422, negative_clear: 147, unclear_not_clear: 122 }
+};
+
+/* ---------- Metric helpers (mirror src/sickle_cell/metrics.py) ---------- */
+function computeMetrics(cm) {
+  const n = cm.length;
+  const total = cm.flat().reduce((a, b) => a + b, 0);
+  let correct = 0; for (let i = 0; i < n; i++) correct += cm[i][i];
+  const per = DATA.classes.map((name, i) => {
+    const tp = cm[i][i];
+    const fn = cm[i].reduce((a, b) => a + b, 0) - tp;
+    let colSum = 0; for (let r = 0; r < n; r++) colSum += cm[r][i];
+    const fp = colSum - tp;
+    const precision = tp + fp ? tp / (tp + fp) : 0;
+    const recall = tp + fn ? tp / (tp + fn) : 0;
+    const f1 = precision + recall ? 2 * precision * recall / (precision + recall) : 0;
+    return { name, precision, recall, f1, support: tp + fn };
+  });
+  const macroF1 = per.reduce((a, p) => a + p.f1, 0) / n;
+  return { total, accuracy: total ? correct / total : 0, per, macroF1 };
+}
+const fmtPct = v => (v * 100).toFixed(2) + "%";
+const fmt3 = v => v.toFixed(3);
+const $ = id => document.getElementById(id);
+
+/* ---------- Tabs ---------- */
+function showTab(name) {
+  document.querySelectorAll("#tabs button").forEach(b => b.setAttribute("aria-selected", b.dataset.tab === name));
+  document.querySelectorAll(".panel").forEach(p => p.classList.toggle("on", p.id === "panel-" + name));
+  history.replaceState(null, "", "#" + name);
+}
+document.querySelectorAll("#tabs button").forEach(b => b.addEventListener("click", () => showTab(b.dataset.tab)));
+document.querySelectorAll("[data-goto]").forEach(a => a.addEventListener("click", e => { e.preventDefault(); showTab(a.dataset.goto); }));
+
+/* ---------- Compare ---------- */
+const METRICS = {
+  accuracy: {
+    label: "Accuracy",
+    reported: m => DATA.reported[m].accuracy,
+    recomputed: m => computeMetrics(DATA.matrices[m]).accuracy * 100,
+    fmt: v => v.toFixed(2) + "%"
+  },
+  macro: {
+    label: "Macro-average F1",
+    reported: m => DATA.reported[m].macro * 100,
+    recomputed: m => computeMetrics(DATA.matrices[m]).macroF1 * 100,
+    fmt: v => (v / 100).toFixed(3)
+  },
+  recall: {
+    label: "Sickle-class recall",
+    reported: m => DATA.reported[m].sickleRecall * 100,
+    recomputed: m => computeMetrics(DATA.matrices[m]).per[2].recall * 100,
+    fmt: v => (v / 100).toFixed(3)
+  }
+};
+let activeMetric = "accuracy";
+
+function drawChart() {
+  const spec = METRICS[activeMetric];
+  const W = 640, H = 300, pad = { l: 44, r: 12, t: 22, b: 44 };
+  const innerW = W - pad.l - pad.r, innerH = H - pad.t - pad.b;
+  const groupW = innerW / DATA.models.length;
+  const barW = Math.min(46, groupW * 0.3);
+  let s = `<svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="${spec.label} by model, reported and recomputed">`;
+  for (let t = 0; t <= 100; t += 25) {
+    const y = pad.t + innerH * (1 - t / 100);
+    s += `<line x1="${pad.l}" x2="${W - pad.r}" y1="${y}" y2="${y}" style="stroke:var(--border)"/>`;
+    s += `<text x="${pad.l - 6}" y="${y + 4}" text-anchor="end" font-size="11" style="fill:var(--muted)">${t}</text>`;
+  }
+  DATA.models.forEach((m, i) => {
+    const cx = pad.l + i * groupW + groupW / 2;
+    const rep = spec.reported(m), rec = spec.recomputed(m);
+    [[cx - barW - 2, rep, "var(--bar-rep)"], [cx + 2, rec, "var(--accent)"]].forEach(([x, v, color]) => {
+      const h = innerH * (v / 100), y = pad.t + innerH - h;
+      s += `<rect x="${x}" y="${y}" width="${barW}" height="${h}" rx="3" style="fill:${color}"/>`;
+      s += `<text x="${x + barW / 2}" y="${y - 5}" text-anchor="middle" font-size="10.5" style="fill:var(--text)">${spec.fmt(v)}</text>`;
+    });
+    s += `<text x="${cx}" y="${H - 16}" text-anchor="middle" font-size="12.5" style="fill:var(--text);font-weight:600">${m}</text>`;
+  });
+  s += `</svg>`;
+  $("chart").innerHTML = s;
+}
+
+function drawCompareTable() {
+  let h = `<tr><th>Model</th><th>Accuracy (paper)</th><th>Accuracy (recomputed)</th><th>Macro-F1 (paper, Table 2)</th><th>Macro-F1 (recomputed)</th><th>Sickle recall (paper)</th><th>Sickle recall (recomputed)</th><th>Status</th></tr>`;
+  DATA.models.forEach(m => {
+    const r = DATA.reported[m], c = computeMetrics(DATA.matrices[m]);
+    const reproduces = Math.abs(r.accuracy - c.accuracy * 100) < 0.01;
+    h += `<tr><td>${m}</td><td>${r.accuracy.toFixed(2)}%</td><td>${fmtPct(c.accuracy)}</td>
+      <td>${r.macro.toFixed(2)}</td><td>${fmt3(c.macroF1)}</td>
+      <td>${r.sickleRecall.toFixed(2)}</td><td>${fmt3(c.per[2].recall)}</td>
+      <td class="${reproduces ? "tag-ok" : "tag-bad"}">${reproduces ? "✓ reproduces" : "✗ does not reproduce"}</td></tr>`;
+  });
+  $("compareTable").innerHTML = h;
+}
+
+document.querySelectorAll("#metricSeg button").forEach(b => b.addEventListener("click", () => {
+  activeMetric = b.dataset.metric;
+  document.querySelectorAll("#metricSeg button").forEach(x => x.setAttribute("aria-pressed", x === b));
+  drawChart();
+}));
+
+/* ---------- Matrix explorer ---------- */
+let activeModel = "InceptionV3";
+function renderModelButtons() {
+  $("modelSeg").innerHTML = DATA.models.map(m =>
+    `<button data-model="${m}" aria-pressed="${m === activeModel}">${m}</button>`).join("");
+  $("modelSeg").querySelectorAll("button").forEach(b => b.addEventListener("click", () => {
+    activeModel = b.dataset.model; renderModelButtons(); renderMatrix();
+  }));
+}
+function renderMatrix() {
+  const cm = DATA.matrices[activeModel], n = cm.length;
+  const rowTotals = cm.map(r => r.reduce((a, b) => a + b, 0));
+  let h = `<tr><th class="h">Actual \\ Predicted</th>${DATA.classes.map(c => `<td class="h">${c}</td>`).join("")}</tr>`;
+  cm.forEach((row, i) => {
+    h += `<tr><td class="rowh">${DATA.classes[i]} (n=${rowTotals[i]})</td>`;
+    row.forEach((v, j) => {
+      const share = rowTotals[i] ? v / rowTotals[i] : 0;
+      const alpha = (share * 0.85).toFixed(3);
+      const dark = share > 0.55;
+      h += `<td title="Actual ${DATA.classes[i]} → predicted ${DATA.classes[j]}: ${v} of ${rowTotals[i]}"
+              style="background:rgba(37,99,235,${alpha});color:${dark ? "#fff" : "var(--text)"}">
+              <div class="cell-n">${v}</div><div class="cell-p">${(share * 100).toFixed(1)}%</div></td>`;
+    });
+    h += `</tr>`;
+  });
+  $("cmTable").innerHTML = h;
+
+  const m = computeMetrics(cm);
+  let p = `<tr><th>Class</th><th>Support</th><th>Precision</th><th>Recall</th><th>F1</th></tr>`;
+  m.per.forEach(x => p += `<tr><td>${x.name}</td><td>${x.support}</td><td>${fmt3(x.precision)}</td><td>${fmt3(x.recall)}</td><td>${fmt3(x.f1)}</td></tr>`);
+  p += `<tr><td><strong>Macro average</strong></td><td>${m.total}</td><td></td><td></td><td><strong>${fmt3(m.macroF1)}</strong></td></tr>`;
+  p += `<tr><td><strong>Accuracy</strong></td><td></td><td></td><td></td><td><strong>${fmtPct(m.accuracy)}</strong></td></tr>`;
+  $("perClass").innerHTML = p;
+}
+
+/* ---------- Calculator ---------- */
+function readCalc() {
+  return [0, 1, 2].map(i => [0, 1, 2].map(j => Math.max(0, parseInt(document.getElementById(`c${i}${j}`).value, 10) || 0)));
+}
+function renderCalc() {
+  const cm = readCalc(), m = computeMetrics(cm);
+  $("calcKpis").innerHTML = `
+    <div>Samples<b>${m.total}</b></div>
+    <div>Accuracy<b>${fmtPct(m.accuracy)}</b></div>
+    <div>Macro-F1<b>${fmt3(m.macroF1)}</b></div>
+    <div>Sickle recall<b>${fmt3(m.per[2].recall)}</b></div>`;
+  let p = `<tr><th>Class</th><th>Support</th><th>Precision</th><th>Recall</th><th>F1</th></tr>`;
+  m.per.forEach(x => p += `<tr><td>${x.name}</td><td>${x.support}</td><td>${fmt3(x.precision)}</td><td>${fmt3(x.recall)}</td><td>${fmt3(x.f1)}</td></tr>`);
+  $("calcPer").innerHTML = p;
+}
+function buildCalcTable(cm) {
+  let h = `<tr><th>Actual \\ Predicted</th>${DATA.classes.map(c => `<th>${c}</th>`).join("")}</tr>`;
+  cm.forEach((row, i) => {
+    h += `<tr><td>${DATA.classes[i]}</td>` + row.map((v, j) =>
+      `<td><input type="number" min="0" step="1" id="c${i}${j}" value="${v}" aria-label="actual ${DATA.classes[i]}, predicted ${DATA.classes[j]}"></td>`).join("") + `</tr>`;
+  });
+  $("calcTable").innerHTML = h;
+  $("calcTable").querySelectorAll("input").forEach(el => el.addEventListener("input", renderCalc));
+  renderCalc();
+}
+document.querySelectorAll("[data-preset]").forEach(b => b.addEventListener("click", () => buildCalcTable(DATA.matrices[b.dataset.preset])));
+
+/* ---------- Dataset ---------- */
+function renderDataset() {
+  const { train, val, test } = DATA.split, total = train + val + test;
+  const pct = v => (v / total * 100);
+  const seg = (parts, colors) => parts.map((p, i) =>
+    `<div style="width:${p.w}%;background:${colors[i]}">${p.label}</div>`).join("");
+  $("totalN").textContent = total.toLocaleString();
+  $("splitStated").innerHTML = seg([{ w: 70, label: "Train 70%" }, { w: 20, label: "Val 20%" }, { w: 10, label: "Test 10%" }],
+    ["#2563eb", "#7c3aed", "#0d9488"]);
+  $("splitActual").innerHTML = seg([
+    { w: pct(train), label: `Train ${pct(train).toFixed(1)}%` },
+    { w: pct(val), label: `Val ${pct(val).toFixed(1)}%` },
+    { w: pct(test), label: `Test ${pct(test).toFixed(1)}%` }], ["#2563eb", "#7c3aed", "#0d9488"]);
+  $("splitTable").innerHTML = `<tr><th>Subset</th><th>Samples</th><th>Share of total</th></tr>` +
+    [["Train", train], ["Validation", val], ["Test", test], ["Total", total]].map(([n, v]) =>
+      `<tr><td>${n}</td><td>${v.toLocaleString()}</td><td>${pct(v).toFixed(1)}%</td></tr>`).join("");
+  const k = DATA.kaggle;
+  $("kaggleTable").innerHTML = `<tr><th>Kaggle folder</th><th>Images</th><th>Mapped class</th></tr>
+    <tr><td>Labelled + Unlabelled (sickle cells)</td><td>${k.positive_sickle}</td><td>sickle</td></tr>
+    <tr><td>Clear (negative)</td><td>${k.negative_clear}</td><td>non_sickle</td></tr>
+    <tr><td>Not Clear (artifacts, odd colour, bad crop)</td><td>${k.unclear_not_clear}</td><td>AIN</td></tr>`;
+}
+
+/* ---------- Pipeline ---------- */
+const STEPS = [
+  ["1. Image collection and cleaning", "Images gathered from Kaggle and Roboflow. Corrupted or redundant samples were removed."],
+  ["2. Annotation", "Images were labelled as sickle, non-sickle or anomaly (AIN, anomalies inside the nest directory). The Kaggle positives were mapped to sickle; the Roboflow WBC, RBC and platelet classes were mapped to non-sickle."],
+  ["3. Preprocessing", "Resize to 224×224 (ResNet50, ShuffleNetV2, MobileNetV2) or 299×299 (InceptionV3), followed by ImageNet normalisation."],
+  ["4. Augmentation", "Training only: horizontal flip, rotation of ±15°, colour jitter and random resized crop (80–100% of area). Evaluation uses a deterministic resize only."],
+  ["5. Transfer learning", "ImageNet-pretrained backbones with a new 3-class head. AdamW (learning rate 1e-4, weight decay 1e-4), cross-entropy loss and cosine annealing. The paper gives 10 epochs for MobileNetV2 and ShuffleNetV2, "more than 10" for InceptionV3, and no epoch count for ResNet50. The InceptionV3 head uses dropout 0.5 and auxiliary-loss weights 0.6 and 0.4."],
+  ["6. Evaluation", "Accuracy, sensitivity (recall), precision, F1-score and confusion matrices, followed by error analysis of misclassifications."],
+  ["7. Explainability", "Grad-CAM heatmaps and LIME superpixel explanations, used to check that the model attends to cell morphology rather than background."]
+];
+$("steps").innerHTML = STEPS.map(([t, d], i) =>
+  `<details${i === 0 ? " open" : ""}><summary>${t}</summary><p>${d}</p></details>`).join("");
+
+/* ---------- Init ---------- */
+drawChart();
+drawCompareTable();
+renderModelButtons();
+renderMatrix();
+buildCalcTable(DATA.matrices["InceptionV3"]);
+renderDataset();
+const start = (location.hash || "#compare").slice(1);
+if (document.getElementById("panel-" + start)) showTab(start);
+</script>
+</body>
+</html>
